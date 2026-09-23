@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:taskly_app/widgets/add_task_sheet.dart';
 import 'package:taskly_app/widgets/task_tile.dart';
 
 import '../task.dart';
@@ -50,8 +51,23 @@ class _TasksListScreenState extends State<TasksListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // we'll wire this up once the Add Task screen exists
+        onPressed: () async {
+          final newTask = await showModalBottomSheet<Task>(
+            context: context,
+            isScrollControlled: true,
+            // constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+            builder: (context) => const AddTaskSheet(),
+          );
+          if(newTask != null){
+            setState(() {
+              tasks.add(newTask);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Task added successfully')),
+            );
+          }
+
         },
         backgroundColor: Colors.blue,
 
@@ -116,7 +132,6 @@ class _TasksListScreenState extends State<TasksListScreen> {
             ),
           );
   }
-
 
 
   Container _header(int incompleteCount) {
