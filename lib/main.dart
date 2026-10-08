@@ -1,20 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:taskly_app/screens/tasks_list_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'app/app.dart';
 
 void main() {
-  runApp(const TasklyApp());
-}
 
-class TasklyApp extends StatelessWidget {
-  const TasklyApp({super.key});
+  WidgetsFlutterBinding.ensureInitialized();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: 'Poppins'),
-      title: 'Taskly',
-      debugShowCheckedModeBanner: false,
-      home: TasksListScreen(),
-    );
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWeb;
   }
+  runApp(ProviderScope(child: MyApp()));
 }
+
